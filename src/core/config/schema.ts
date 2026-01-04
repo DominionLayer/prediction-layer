@@ -78,7 +78,7 @@ export const GeneralConfigSchema = z.object({
 });
 
 export const GatewayConfigSchema = z.object({
-  url: z.string().url().default('http://localhost:3100'),
+  url: z.string().url().default('https://web-production-2fb66.up.railway.app'),
   token: z.string().optional(),
 });
 
