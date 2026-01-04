@@ -32,7 +32,7 @@ export const usersRepo = {
   async create(input: CreateUserInput): Promise<User> {
     const db = await getDatabase();
     const id = nanoid();
-    const now = Date.now();
+    const now = new Date().toISOString();
 
     await db.execute(
       `INSERT INTO users (id, email, name, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`,
@@ -76,7 +76,7 @@ export const usersRepo = {
     const db = await getDatabase();
     await db.execute(
       'UPDATE users SET status = ?, updated_at = ? WHERE id = ?',
-      [status, Date.now(), id]
+      [status, new Date().toISOString(), id]
     );
   },
 
@@ -109,7 +109,7 @@ export const usersRepo = {
 
     if (fields.length > 0) {
       fields.push('updated_at = ?');
-      values.push(Date.now());
+      values.push(new Date().toISOString());
       values.push(userId);
       
       await db.execute(

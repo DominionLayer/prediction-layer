@@ -9,10 +9,13 @@ import { request } from 'undici';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
+// Default gateway URL
+const DEFAULT_GATEWAY_URL = 'https://web-production-2fb66.up.railway.app';
+
 export const loginCommand = new Command()
   .name('login')
   .description('Authenticate with Dominion Gateway')
-  .option('--url <url>', 'Gateway URL', 'http://localhost:3100')
+  .option('--url <url>', 'Gateway URL', DEFAULT_GATEWAY_URL)
   .option('--token <token>', 'API token (or will be prompted)')
   .action(async (options) => {
     console.log(chalk.cyan('\n=== Dominion Gateway Login ===\n'));

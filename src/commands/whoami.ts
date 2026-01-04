@@ -7,13 +7,16 @@ import { request } from 'undici';
 import chalk from 'chalk';
 import { getConfig } from '../core/config/loader.js';
 
+// Default gateway URL
+const DEFAULT_GATEWAY_URL = 'https://web-production-2fb66.up.railway.app';
+
 export const whoamiCommand = new Command()
   .name('whoami')
   .description('Show current user and remaining quota')
   .option('--json', 'Output as JSON')
   .action(async (options) => {
     const config = getConfig();
-    const apiUrl = process.env.DOMINION_API_URL || config.gateway?.url || 'http://localhost:3100';
+    const apiUrl = process.env.DOMINION_API_URL || config.gateway?.url || DEFAULT_GATEWAY_URL;
     const apiToken = process.env.DOMINION_API_TOKEN || config.gateway?.token;
 
     if (!apiToken) {

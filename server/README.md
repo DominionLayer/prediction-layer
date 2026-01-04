@@ -2,6 +2,8 @@
 
 LLM Gateway service that provides a unified API for LLM completions with authentication, rate limiting, and usage tracking.
 
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/dominion-gateway?referralCode=dominion)
+
 ## Features
 
 - **Unified API**: Single endpoint for OpenAI and Anthropic models
@@ -13,7 +15,24 @@ LLM Gateway service that provides a unified API for LLM completions with authent
 
 ## Quick Start
 
-### Option 1: Docker (Recommended)
+### Option 1: Railway (Easiest)
+
+1. Fork this repo or deploy from GitHub
+2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub**
+3. Select this repository
+4. Add environment variables in Railway dashboard:
+   - `OPENAI_API_KEY` - Your OpenAI key
+   - `ANTHROPIC_API_KEY` - Your Anthropic key
+   - `ADMIN_TOKEN` - Secure admin token (min 16 chars)
+5. Add a PostgreSQL database: **+ New** → **Database** → **PostgreSQL**
+6. Generate a domain: **Settings** → **Networking** → **Generate Domain**
+
+Railway will automatically:
+- Detect Node.js and build the project
+- Set `PORT` and `DATABASE_URL`
+- Run health checks at `/health`
+
+### Option 2: Docker
 
 ```bash
 # Copy environment file

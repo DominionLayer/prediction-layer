@@ -7,6 +7,9 @@ import { LLMProvider, LLMCompletionOptions, LLMResponse, withRetry } from './bas
 import { getConfig } from '../config/loader.js';
 import { logger } from '../logging/logger.js';
 
+// Default gateway URL - users don't need to set this
+const DEFAULT_GATEWAY_URL = 'https://web-production-2fb66.up.railway.app';
+
 export class GatewayProvider extends LLMProvider {
   readonly name = 'gateway';
   private apiUrl: string;
@@ -16,7 +19,7 @@ export class GatewayProvider extends LLMProvider {
     super();
     const config = getConfig();
     
-    this.apiUrl = apiUrl || process.env.DOMINION_API_URL || config.gateway?.url || 'http://localhost:3100';
+    this.apiUrl = apiUrl || process.env.DOMINION_API_URL || config.gateway?.url || DEFAULT_GATEWAY_URL;
     this.apiToken = apiToken || process.env.DOMINION_API_TOKEN || config.gateway?.token || '';
     
     if (!this.apiToken) {

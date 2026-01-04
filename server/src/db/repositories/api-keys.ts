@@ -43,7 +43,7 @@ export const apiKeysRepo = {
     await db.execute(
       `INSERT INTO api_keys (id, user_id, key_hash, key_prefix, name, created_at)
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [keyId, userId, keyHash, prefix, name || null, Date.now()]
+      [keyId, userId, keyHash, prefix, name || null, new Date().toISOString()]
     );
 
     return {
@@ -75,7 +75,7 @@ export const apiKeysRepo = {
           // Update last_used_at
           await db.execute(
             'UPDATE api_keys SET last_used_at = ? WHERE id = ?',
-            [Date.now(), key.id]
+            [new Date().toISOString(), key.id]
           );
           
           return { userId: key.user_id, keyId: key.id };

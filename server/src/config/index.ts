@@ -20,8 +20,8 @@ const ConfigSchema = z.object({
   openaiApiKey: z.string().optional(),
   anthropicApiKey: z.string().optional(),
   
-  // Admin
-  adminToken: z.string().min(16),
+  // Admin - optional with default for initial setup
+  adminToken: z.string().min(16).optional().default('change-me-in-production-16'),
   
   // Rate Limiting
   rateLimitMax: z.coerce.number().default(60),

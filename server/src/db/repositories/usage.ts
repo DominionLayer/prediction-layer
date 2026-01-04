@@ -45,8 +45,8 @@ export const usageRepo = {
   async record(input: CreateUsageInput): Promise<UsageRecord> {
     const db = await getDatabase();
     const id = nanoid();
-    const now = Date.now();
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date().toISOString();
+    const today = now.split('T')[0];
 
     // Calculate cost estimate
     const costs = TOKEN_COSTS[input.model] || { input: 0.001, output: 0.002 };
@@ -71,7 +71,7 @@ export const usageRepo = {
         input.latencyMs,
         input.status,
         input.errorMessage || null,
-        now,
+        new Date().toISOString(),
       ]
     );
 
