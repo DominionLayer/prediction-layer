@@ -1,0 +1,98 @@
+# Polymarket Prediction CLI Configuration
+# Copy this file to pm.config.yaml and customize
+
+general:
+  name: "Polymarket Analysis"
+  environment: "development"  # development | production
+
+# LLM Provider Configuration
+provider:
+  # Default provider: openai | anthropic | stub
+  default: "stub"
+  
+  openai:
+    model: "gpt-4-turbo-preview"
+    temperature: 0.2
+    max_tokens: 2048
+  
+  anthropic:
+    model: "claude-3-5-sonnet-20241022"
+    temperature: 0.2
+    max_tokens: 2048
+  
+  stub:
+    # Deterministic responses for testing
+    deterministic: true
+
+# Polymarket API Configuration
+polymarket:
+  # Base URL for Polymarket API
+  base_url: "https://clob.polymarket.com"
+  gamma_url: "https://gamma-api.polymarket.com"
+  
+  # How often to poll for updates (seconds)
+  poll_interval_sec: 60
+  
+  # Request timeout (ms)
+  timeout_ms: 30000
+
+# Scoring / Filtering Configuration
+scoring:
+  # Minimum liquidity in USD to consider a market
+  min_liquidity: 1000
+  
+  # Minimum 24h volume in USD
+  min_volume: 100
+  
+  # Maximum bid-ask spread (as decimal, e.g., 0.05 = 5%)
+  max_spread: 0.10
+  
+  # Default number of top markets to show
+  default_top_n: 20
+
+# Simulation Configuration
+simulation:
+  # Trading fee in basis points (100 bps = 1%)
+  fee_bps: 100
+  
+  # Expected slippage in basis points
+  slippage_bps: 50
+  
+  # Confidence band for uncertainty (+/- this value)
+  confidence_band: 0.10
+  
+  # Default position size (in contracts)
+  default_position_size: 10
+
+# Reporting Configuration
+reporting:
+  # Output directory for reports
+  out_dir: "./reports"
+  
+  # Include raw data in reports
+  include_raw_data: false
+
+# Rate Limiting
+rate_limits:
+  # Requests per second to Polymarket API
+  polymarket_rps: 5
+  
+  # Requests per minute to LLM providers
+  llm_rpm: 20
+  
+  # Retry configuration
+  max_retries: 3
+  base_delay_ms: 1000
+  max_delay_ms: 30000
+
+# Database Configuration
+database:
+  path: "./data/polymarket.db"
+  wal_mode: true
+
+# Logging Configuration
+logging:
+  level: "info"  # debug | info | warn | error
+  format: "json"  # json | pretty
+  file: "./logs/polymarket.log"
+

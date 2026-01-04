@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Config (user-specific)
+pm.config.yaml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test coverage
+coverage/
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# Reports (generated)
+reports/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# pnpm
+pnpm-debug.log
+
