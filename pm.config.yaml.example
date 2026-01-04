@@ -5,7 +5,14 @@ general:
   name: "Polymarket Analysis"
   environment: "development"  # development | production
 
-# LLM Provider Configuration
+# Gateway Configuration (Recommended - no API keys needed)
+# Configure this OR the direct provider settings below
+gateway:
+  url: "http://localhost:3100"  # Your gateway URL
+  # token: "dom_xxx"  # Set via `dominion-pm login` or DOMINION_API_TOKEN env var
+
+# Direct LLM Provider Configuration (Alternative to Gateway)
+# Only used if gateway token is not set
 provider:
   # Default provider: openai | anthropic | stub
   default: "stub"

@@ -8,4 +8,6 @@ export { reportCommand } from './report.js';
 export { doctorCommand } from './doctor.js';
 export { execCommand } from './exec.js';
 export { disclaimerCommand } from './disclaimer.js';
+export { loginCommand } from './login.js';
+export { whoamiCommand } from './whoami.js';
 

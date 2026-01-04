@@ -123,6 +123,8 @@ dominion-pm simulate <market_id> --position NO --size 5 --fee 100
 | Command | Description |
 |---------|-------------|
 | `dominion-pm init` | Initialize config and database |
+| `dominion-pm login` | Authenticate with Gateway |
+| `dominion-pm whoami` | Show current user and quota |
 | `dominion-pm scan` | Fetch active markets |
 | `dominion-pm show <id>` | Display market details |
 | `dominion-pm analyze <id>` | Run probability estimation |
@@ -135,7 +137,32 @@ dominion-pm simulate <market_id> --position NO --size 5 --fee 100
 
 ## Provider Configuration
 
-### Using OpenAI
+### Using Dominion Gateway (Recommended)
+
+The Gateway provides centralized LLM access with authentication, rate limiting, and usage tracking. Users don't need their own OpenAI/Anthropic keys.
+
+```bash
+# Login to the gateway
+dominion-pm login
+
+# Check your quota
+dominion-pm whoami
+```
+
+Or configure manually:
+```yaml
+# pm.config.yaml
+gateway:
+  url: "http://localhost:3100"  # Your gateway URL
+  token: "dom_your_api_token"   # From administrator
+```
+
+```bash
+export DOMINION_API_URL=http://localhost:3100
+export DOMINION_API_TOKEN=dom_your_api_token
+```
+
+### Using OpenAI (Direct)
 
 ```yaml
 # pm.config.yaml
@@ -151,7 +178,7 @@ export OPENAI_API_KEY=sk-your-key
 dominion-pm analyze <market_id>
 ```
 
-### Using Anthropic
+### Using Anthropic (Direct)
 
 ```yaml
 # pm.config.yaml
@@ -302,8 +329,10 @@ database:
 
 | Variable | Description |
 |----------|-------------|
-| `OPENAI_API_KEY` | OpenAI API key |
-| `ANTHROPIC_API_KEY` | Anthropic API key |
+| `DOMINION_API_URL` | Gateway URL (default: http://localhost:3100) |
+| `DOMINION_API_TOKEN` | Gateway API token |
+| `OPENAI_API_KEY` | OpenAI API key (direct mode) |
+| `ANTHROPIC_API_KEY` | Anthropic API key (direct mode) |
 | `LLM_PROVIDER` | Override default provider |
 | `DATABASE_PATH` | Override database path |
 | `LOG_LEVEL` | debug, info, warn, error |
@@ -318,7 +347,7 @@ src/
     config/            # Configuration loading
     db/                # SQLite database
     logging/           # Structured logging
-    providers/         # LLM providers
+    providers/         # LLM providers (Gateway, OpenAI, Anthropic, Stub)
     reporting/         # Report generation
   polymarket/          # Polymarket client
   analysis/
@@ -326,9 +355,48 @@ src/
     edge.ts            # Edge calculation
     prompts.ts         # LLM prompts
   simulation/          # EV simulation
+server/                # LLM Gateway backend
+  src/
+    config/            # Server configuration
+    db/                # Database (PostgreSQL/SQLite)
+    middleware/        # Auth, rate limiting, quota
+    routes/            # API endpoints
+    services/          # LLM service
+  tests/               # Server tests
 tests/
   unit/                # Unit tests
   integration/         # Integration tests
+```
+
+## Gateway Deployment (For Administrators)
+
+See [server/README.md](server/README.md) for full documentation.
+
+### Quick Start
+
+```bash
+cd server
+
+# Copy and edit environment
+cp env.example .env
+# Set OPENAI_API_KEY, ANTHROPIC_API_KEY, ADMIN_TOKEN
+
+# Start with Docker
+docker-compose -f ../docker-compose.sqlite.yml up -d
+
+# Create a user
+curl -X POST http://localhost:3100/admin/users \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "User", "email": "user@example.com"}'
+
+# Create an API key
+curl -X POST http://localhost:3100/admin/keys \
+  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "USER_ID_FROM_ABOVE"}'
+
+# Give the dom_xxx key to the user
 ```
 
 ## Testing

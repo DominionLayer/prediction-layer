@@ -1,0 +1,39 @@
+# Dominion Gateway - SQLite Only (Simpler deployment)
+# Use this for development or small deployments
+
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: dominion-gateway
+    restart: unless-stopped
+    ports:
+      - "${GATEWAY_PORT:-3100}:3100"
+    environment:
+      - NODE_ENV=production
+      - PORT=3100
+      - HOST=0.0.0.0
+      - SQLITE_PATH=/app/data/gateway.db
+      # LLM Provider API Keys
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # Admin Token
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-}
+      # Rate Limits
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX:-60}
+      - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS:-60000}
+      # Default Quotas
+      - DEFAULT_DAILY_REQUESTS=${DEFAULT_DAILY_REQUESTS:-1000}
+      - DEFAULT_DAILY_TOKENS=${DEFAULT_DAILY_TOKENS:-100000}
+      - DEFAULT_MONTHLY_SPEND_CAP_USD=${DEFAULT_MONTHLY_SPEND_CAP_USD:-50}
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+

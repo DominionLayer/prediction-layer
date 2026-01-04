@@ -17,6 +17,8 @@ import {
   doctorCommand,
   execCommand,
   disclaimerCommand,
+  loginCommand,
+  whoamiCommand,
 } from '../commands/index.js';
 
 const program = new Command();
@@ -47,6 +49,8 @@ program.addCommand(reportCommand);
 program.addCommand(doctorCommand);
 program.addCommand(execCommand);
 program.addCommand(disclaimerCommand);
+program.addCommand(loginCommand);
+program.addCommand(whoamiCommand);
 
 // Parse and execute
 program.parse();

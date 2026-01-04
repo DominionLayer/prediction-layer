@@ -1,0 +1,81 @@
+# Dominion Platform - Docker Compose
+# Includes: Gateway service + PostgreSQL (optional)
+
+version: '3.8'
+
+services:
+  # LLM Gateway Service
+  gateway:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: dominion-gateway
+    restart: unless-stopped
+    ports:
+      - "${GATEWAY_PORT:-3100}:3100"
+    environment:
+      - NODE_ENV=production
+      - PORT=3100
+      - HOST=0.0.0.0
+      # Database: Use SQLite by default, or PostgreSQL if DATABASE_URL is set
+      - DATABASE_URL=${DATABASE_URL:-}
+      - SQLITE_PATH=/app/data/gateway.db
+      # LLM Provider API Keys (set these!)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # Admin Token (required!)
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-}
+      # Rate Limits
+      - RATE_LIMIT_MAX=${RATE_LIMIT_MAX:-60}
+      - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS:-60000}
+      # Default Quotas
+      - DEFAULT_DAILY_REQUESTS=${DEFAULT_DAILY_REQUESTS:-1000}
+      - DEFAULT_DAILY_TOKENS=${DEFAULT_DAILY_TOKENS:-100000}
+      - DEFAULT_MONTHLY_SPEND_CAP_USD=${DEFAULT_MONTHLY_SPEND_CAP_USD:-50}
+      # Logging
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_PROMPTS=${LOG_PROMPTS:-false}
+    volumes:
+      - gateway_data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      - postgres
+    networks:
+      - dominion
+
+  # PostgreSQL Database (optional, for production)
+  postgres:
+    image: postgres:16-alpine
+    container_name: dominion-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-dominion}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-dominion}
+      - POSTGRES_DB=${POSTGRES_DB:-dominion_gateway}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dominion}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dominion
+
+volumes:
+  gateway_data:
+    driver: local
+  postgres_data:
+    driver: local
+
+networks:
+  dominion:
+    driver: bridge
+

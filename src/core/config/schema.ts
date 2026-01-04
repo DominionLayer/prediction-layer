@@ -77,9 +77,15 @@ export const GeneralConfigSchema = z.object({
   environment: z.enum(['development', 'production']).default('development'),
 });
 
+export const GatewayConfigSchema = z.object({
+  url: z.string().url().default('http://localhost:3100'),
+  token: z.string().optional(),
+});
+
 export const ConfigSchema = z.object({
   general: GeneralConfigSchema.default({}),
   provider: ProviderConfigSchema.default({}),
+  gateway: GatewayConfigSchema.default({}),
   polymarket: PolymarketConfigSchema.default({}),
   scoring: ScoringConfigSchema.default({}),
   simulation: SimulationConfigSchema.default({}),
