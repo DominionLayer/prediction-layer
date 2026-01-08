@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import { getConfig } from '../core/config/loader.js';
 
 // Default gateway URL
-const DEFAULT_GATEWAY_URL = 'https://web-production-2fb66.up.railway.app';
+const DEFAULT_GATEWAY_URL = 'https://api.dominionlayer.io';
 
 export const whoamiCommand = new Command()
   .name('whoami')

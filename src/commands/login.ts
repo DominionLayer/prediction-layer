@@ -10,7 +10,7 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 
 // Default gateway URL
-const DEFAULT_GATEWAY_URL = 'https://web-production-2fb66.up.railway.app';
+const DEFAULT_GATEWAY_URL = 'https://api.dominionlayer.io';
 
 export const loginCommand = new Command()
   .name('login')

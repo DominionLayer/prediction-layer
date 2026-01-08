@@ -8,7 +8,7 @@ import { getConfig } from '../config/loader.js';
 import { logger } from '../logging/logger.js';
 
 // Default gateway URL - users don't need to set this
-const DEFAULT_GATEWAY_URL = 'https://web-production-2fb66.up.railway.app';
+const DEFAULT_GATEWAY_URL = 'https://api.dominionlayer.io';
 
 export class GatewayProvider extends LLMProvider {
   readonly name = 'gateway';
